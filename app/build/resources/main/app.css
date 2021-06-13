@@ -1,0 +1,47 @@
+.button {
+    -fx-background-color: rgb(173, 173, 173);
+    -fx-border-color: #000;
+}
+.button:disabled {
+    -fx-opacity: 1.0;
+}
+.normal-button {
+    -fx-background-color: #ff7b00;
+    -fx-border-color: rgba(255, 255, 255, 0);
+    -fx-text-fill: #fafafa;
+    -fx-padding: 10 20;
+    -fx-background-radius: 30;
+    -fx-font-size: 20;
+    -fx-font-family: "Arial";
+    -fx-font-weight: bold;
+}
+.clicked-button {
+    -fx-background-color: #fff;
+}
+.bomb-button {
+    -fx-background-color: rgb(255,0,0);
+}
+.one-button {
+    -fx-text-fill:rgb(0, 0, 255);
+    -fx-background-color: #fff;
+}
+.two-button {
+    -fx-text-fill:rgb(21, 128, 21);
+    -fx-background-color: #fff;
+}
+.three-button {
+    -fx-text-fill:rgb(255,0,0);
+    -fx-background-color: #fff;
+}
+.four-button {
+    -fx-text-fill:rgb(99, 0, 102);
+    -fx-background-color: #fff;
+}
+.five-button {
+    -fx-text-fill:rgb(6, 0, 90);
+    -fx-background-color: #fff;
+}
+.six-button {
+    -fx-text-fill:rgb(102, 0, 0);
+    -fx-background-color: #fff;
+}
