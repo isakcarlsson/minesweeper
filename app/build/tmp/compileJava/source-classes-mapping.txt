@@ -5,6 +5,7 @@ minesweeper/App.java
  minesweeper.App$1
 minesweeper/Board.java
  minesweeper.Board
+ minesweeper.Board$1
 minesweeper/Start.java
  minesweeper.Start
 minesweeper/NormalCell.java

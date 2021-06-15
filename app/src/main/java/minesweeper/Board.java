@@ -3,11 +3,15 @@ package minesweeper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -19,9 +23,20 @@ public class Board {
   private int width;
   private int height;
   private BorderPane fieldView = new BorderPane();
+  private int bombsLeft;
   private int bombs;
+  private Label lblBombs = new Label();
+  private Label lblTime = new Label("Time: 0");
   private Button btnReset = new Button("Reset");
   private Button btnMenu = new Button("Main Menu");
+  private int time = 0;
+  private Timer myTimer = new Timer();
+  private TimerTask task = new TimerTask() {
+    public void run() {
+      time += 1;
+      Platform.runLater(() -> lblTime.setText("Time: " + time / 10f));
+    }
+  };
   
 
   public Board(int width, int height, App app) {
@@ -38,18 +53,20 @@ public class Board {
     });
     this.width = width;
     this.height = height;
-    bombs = width * height / 6;
     fieldView.setPadding(new Insets(5));
     field = new Cell[width][height];  
     generateField();
     setAllNeighbours();
     createView();
+    myTimer.scheduleAtFixedRate(task , 100, 100);
   }
 
   private void generateField() {
-    System.out.println("Bombs");
     List<Integer> freeCells = new ArrayList<Integer>();
     List<Integer> bombPos = new ArrayList<Integer>();
+
+    bombs = width * height / 6;
+    bombsLeft = bombs;
 
     for (int i = 0; i < width * height; i++) {
       freeCells.add(i);
@@ -62,8 +79,6 @@ public class Board {
       freeCells.remove(j);
     }
 
-    System.out.println("Set cells");
-
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         if (bombPos.contains(i * width + j)) {
@@ -73,7 +88,6 @@ public class Board {
         }
       }
     }
-    System.out.println("Done");
   }
 
   private void setAllNeighbours() {
@@ -176,7 +190,7 @@ public class Board {
       }
     }
   }
-
+  
   private void createView() {
     VBox vb = new VBox();
     for (int i = 0; i < height; i ++) {
@@ -189,9 +203,20 @@ public class Board {
     fieldView.setLeft(vb);
     vb = new VBox();
     vb.setSpacing(5);
+    vb.setAlignment(Pos.CENTER);
     vb.getChildren().addAll(btnReset, btnMenu);
-    vb.setAlignment(Pos.BOTTOM_CENTER);
-    fieldView.setCenter(vb);
+    BorderPane bp = new BorderPane();
+    bp.setBottom(vb);
+    vb = new VBox();
+    vb.setSpacing(5);
+    vb.setAlignment(Pos.CENTER);
+    vb.getChildren().addAll(lblBombs, lblTime);
+    bp.setTop(vb);
+    fieldView.setCenter(bp);
+
+    time = 0;
+    lblTime.setText("Time: 0");
+    lblBombs.setText("Bombs left: " + bombsLeft);
   }
 
   public void checkIfCleared() {
@@ -204,21 +229,28 @@ public class Board {
       }
     }
     if (k <= bombs) {
+      myTimer.cancel();
       App.playSound("/snyggt.wav");
-      ImageView iv = new ImageView(new Image(getClass().getResourceAsStream("/bomb.png")));
+      Button btn;
+
       for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-          Button btn = field[j][i].getButton();
+          btn = field[j][i].getButton();
           if (!btn.isDisabled()) {
+            ImageView iv = new ImageView(new Image(getClass().getResourceAsStream("/bomb.png")));
             iv.setFitHeight(25);
             iv.setFitWidth(25);
             btn.setGraphic(iv);
-            disableAll();
           }
         }
       }
       disableAll();
     } 
+  }
+
+  public void changeBombsLeft(int i) {
+    bombsLeft += i;
+    lblBombs.setText("Bombs left: " + bombsLeft);
   }
 
   public void disableAll() {

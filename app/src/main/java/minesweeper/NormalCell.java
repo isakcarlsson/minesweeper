@@ -91,9 +91,11 @@ public class NormalCell implements Cell {
 
   public void rightClick() {
     if (flaged) {
+      board.changeBombsLeft(1);
       flaged = false;
       btn.setGraphic(null);
     } else {
+      board.changeBombsLeft(-1);
       ImageView iv = new ImageView(new Image(getClass().getResourceAsStream("/flag.png")));
       iv.setFitHeight(25);
       iv.setFitWidth(25);

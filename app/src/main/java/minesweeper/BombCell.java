@@ -50,7 +50,9 @@ public class BombCell implements Cell {
     if (flaged) {
       flaged = false;
       btn.setGraphic(null);
+      board.changeBombsLeft(1);
     } else {
+      board.changeBombsLeft(-1);
       ImageView iv = new ImageView(new Image(getClass().getResourceAsStream("/flag.png")));
       iv.setFitHeight(25);
       iv.setFitWidth(25);
